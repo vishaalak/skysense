@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SKYSENSE – Prediction Result</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:       #185FA5;
+      --blue-dark:  #0C447C;
+      --blue-light: #E6F1FB;
+      --text:       #1a1a2e;
+      --muted:      #6b7280;
+      --border:     #d1d9e6;
+      --bg:         #f0f4f9;
+      --white:      #ffffff;
+      --green:      #16a34a;
+      --green-bg:   #f0fdf4;
+      --radius:     12px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 60px; display: flex; align-items: center; gap: 10px; }
+    .nav-logo { font-size: 22px; font-weight: 700; color: var(--blue); letter-spacing: 1px; }
+    .nav-tag  { font-size: 12px; color: var(--muted); margin-left: 4px; }
+
+    .hero { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); color: var(--white); text-align: center; padding: 2.5rem 1rem 5rem; }
+    .hero h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .hero p  { font-size: 0.95rem; opacity: .8; }
+
+    .container { max-width: 780px; margin: -3rem auto 3rem; padding: 0 1rem; }
+
+    .card { background: var(--white); border-radius: var(--radius); box-shadow: 0 4px 24px rgba(0,0,0,.08); padding: 2rem; margin-bottom: 1rem; }
+
+    /* Price hero */
+    .price-box { background: var(--blue-light); border: 1px solid #B5D4F4; border-radius: var(--radius); padding: 1.8rem; text-align: center; margin-bottom: 1.5rem; }
+    .price-label { font-size: 13px; font-weight: 500; color: var(--blue); margin-bottom: 6px; }
+    .price-amount { font-size: 48px; font-weight: 700; color: var(--blue-dark); line-height: 1; }
+    .price-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    /* Details grid */
+    .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .detail-item { background: var(--bg); border-radius: 8px; padding: 12px; }
+    .detail-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .detail-value { font-size: 15px; font-weight: 600; color: var(--text); margin-top: 3px; }
+
+    /* Feature importance */
+    .section-title { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .fi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .fi-name { font-size: 13px; color: var(--text); width: 170px; flex-shrink: 0; }
+    .fi-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; }
+    .fi-bar { height: 6px; background: var(--blue); border-radius: 3px; }
+    .fi-pct { font-size: 12px; color: var(--muted); width: 36px; text-align: right; flex-shrink: 0; }
+
+    /* Buttons */
+    .actions { display: flex; gap: 1rem; }
+    .btn { flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+    .btn-primary { background: var(--blue); color: var(--white); border: none; }
+    .btn-primary:hover { background: var(--blue-dark); }
+    .btn-outline { background: var(--white); color: var(--blue); border: 2px solid var(--blue); }
+    .btn-outline:hover { background: var(--blue-light); }
+
+    @media (max-width: 580px) {
+      .detail-grid { grid-template-columns: 1fr 1fr; }
+      .price-amount { font-size: 36px; }
+      .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">✈ SKYSENSE</span>
+  <span class="nav-tag">Flight Price Prediction</span>
+</nav>
+
+<div class="hero">
+  <h1>Prediction Complete</h1>
+  <p>Here is your estimated flight fare based on the Random Forest model</p>
+</div>
+
+<div class="container">
+
+  <!-- Price result -->
+  <div class="card">
+    <div class="price-box">
+      <div class="price-label">Estimated Flight Price</div>
+      <div class="price-amount">₹{{ price }}</div>
+      <div class="price-note">Predicted by Random Forest Regression Model</div>
+    </div>
+
+    <!-- Flight details -->
+    <div class="section-title">Flight Details</div>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="detail-label">Airline</div>
+        <div class="detail-value">{{ airline }}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Route</div>
+        <div class="detail-value">{{ source }} → {{ destination }}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Date</div>
+        <div class="detail-value">{{ journey_date }}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Departure</div>
+        <div class="detail-value">{{ dep_time }}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Arrival</div>
+        <div class="detail-value">{{ arr_time }}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Duration</div>
+        <div class="detail-value">{{ duration }}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Total Stops</div>
+        <div class="detail-value">
+          {% if total_stops == 0 %}Non-stop
+          {% elif total_stops == 1 %}1 Stop
+          {% else %}{{ total_stops }} Stops{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature importance -->
+  <div class="card">
+    <div class="section-title">Feature Importance (Model Insight)</div>
+    {% for name, score in top_features %}
+    <div class="fi-row">
+      <div class="fi-name">{{ name.replace('_enc','').replace('_',' ') }}</div>
+      <div class="fi-bar-bg">
+        <div class="fi-bar" style="width: {{ (score * 100)|round(1) }}%"></div>
+      </div>
+      <div class="fi-pct">{{ (score * 100)|round(1) }}%</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Actions -->
+  <div class="card">
+    <div class="actions">
+      <a href="/" class="btn btn-primary">← Predict Another Flight</a>
+      <a href="/" onclick="window.print(); return false;" class="btn btn-outline">🖨 Print Result</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
